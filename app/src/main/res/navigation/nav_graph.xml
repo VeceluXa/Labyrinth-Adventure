@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainMenu">
+
+    <fragment
+        android:id="@+id/mainMenu"
+        android:name="com.danilovfa.labyrinthadventure.view.MainMenu"
+        android:label="MainMenu"
+        tools:layout="@layout/fragment_main_menu">
+        <action
+            android:id="@+id/action_mainMenu_to_mainGame"
+            app:destination="@id/mainGame" />
+    </fragment>
+    <fragment
+        android:id="@+id/mainGame"
+        android:name="com.danilovfa.labyrinthadventure.view.MainGame"
+        android:label="fragment_main_game"
+        tools:layout="@layout/fragment_main_game" />
+</navigation>
