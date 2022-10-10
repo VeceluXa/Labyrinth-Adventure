@@ -1,5 +1,7 @@
 package com.danilovfa.labyrinthadventure.model
 
+import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -29,31 +31,45 @@ class Maze(private val context: Context) {
             arrayOf(Room(7, 0), Room(9, 0), Room(3, 0), Room(9, 0), Room(6, 0))
         ),
         arrayOf(
-            arrayOf(Room(10,1), Room(5, 0), Room(10, 9), Room(2, 0), Room(5, 0)),
-            arrayOf(Room(12, 5), Room(7, 0), Room(5, 0), Room(8, 0), Room(8, 0)),
-            arrayOf(Room(0, 0), Room(11, 8), Room(8, 0), Room(8, 0), Room(8, 0)),
-            arrayOf(Room(8, 0), Room(10, 9), Room(1, 0), Room(13, 3), Room(8, 0)),
+            arrayOf(Room(4,0), Room(2, 0), Room(9, 0), Room(9, 0), Room(5, 0)),
+            arrayOf(Room(13, 6), Room(8, 0), Room(10, 7), Room(9, 0), Room(1, 0)),
+            arrayOf(Room(10, 0), Room(3, 0), Room(9, 0), Room(2, 0), Room(1, 0)),
+            arrayOf(Room(12, 3), Room(10, 1), Room(5, 0), Room(13, 9), Room(8, 0)),
             arrayOf(Room(7, 0), Room(9, 0), Room(3, 0), Room(9, 0), Room(6, 0))
         ),
         arrayOf(
-            arrayOf(Room(10,1), Room(5, 0), Room(10, 9), Room(2, 0), Room(5, 0)),
-            arrayOf(Room(12, 5), Room(7, 0), Room(5, 0), Room(8, 0), Room(8, 0)),
-            arrayOf(Room(0, 0), Room(11, 8), Room(8, 0), Room(8, 0), Room(8, 0)),
-            arrayOf(Room(8, 0), Room(10, 9), Room(1, 0), Room(13, 3), Room(8, 0)),
-            arrayOf(Room(7, 0), Room(9, 0), Room(3, 0), Room(9, 0), Room(6, 0))
+            arrayOf(Room(4,0), Room(2, 0), Room(9, 0), Room(11, 5), Room(12, 10)),
+            arrayOf(Room(13, 9), Room(0, 0), Room(9, 0), Room(2, 0), Room(6, 0)),
+            arrayOf(Room(4, 0), Room(1, 0), Room(12, 4), Room(8, 0), Room(12, 1)),
+            arrayOf(Room(8, 0), Room(13, 0), Room(8, 0), Room(8, 0), Room(8, 0)),
+            arrayOf(Room(7, 0), Room(9, 0), Room(3, 0), Room(3, 0), Room(6, 0))
         ),
         arrayOf(
-            arrayOf(Room(10,1), Room(5, 0), Room(10, 9), Room(2, 0), Room(5, 0)),
-            arrayOf(Room(12, 5), Room(7, 0), Room(5, 0), Room(8, 0), Room(8, 0)),
-            arrayOf(Room(0, 0), Room(11, 8), Room(8, 0), Room(8, 0), Room(8, 0)),
-            arrayOf(Room(8, 0), Room(10, 9), Room(1, 0), Room(13, 3), Room(8, 0)),
-            arrayOf(Room(7, 0), Room(9, 0), Room(3, 0), Room(9, 0), Room(6, 0))
+            arrayOf(Room(4,0), Room(2, 0), Room(9, 0), Room(9, 0), Room(11, 4)),
+            arrayOf(Room(8, 0), Room(8, 0), Room(4, 0), Room(9, 0), Room(11, 1)),
+            arrayOf(Room(8, 0), Room(0, 0), Room(1, 0), Room(4, 0), Room(11, 0)),
+            arrayOf(Room(8, 0), Room(8, 0), Room(7, 0), Room(6, 0), Room(12, 6)),
+            arrayOf(Room(13, 10), Room(7, 0), Room(9, 0), Room(9, 0), Room(6, 0))
+        ),
+        arrayOf(
+            arrayOf(Room(4,0), Room(11, 9), Room(4, 0), Room(9, 0), Room(5, 0)),
+            arrayOf(Room(7, 0), Room(9, 0), Room(1, 0), Room(12, 5), Room(13, 0)),
+            arrayOf(Room(4, 0), Room(5, 0), Room(7, 0), Room(3, 0), Room(5, 0)),
+            arrayOf(Room(8, 0), Room(0, 0), Room(9, 0), Room(9, 0), Room(1, 0)),
+            arrayOf(Room(13, 11), Room(13, 3), Room(10, 5), Room(9, 0), Room(6, 0))
         ),
     )
 
     private var floor = maze[0]
 
     private var floorDiscovered = arrayOf(
+        arrayOf(
+            arrayOf(false, false, false, false, false),
+            arrayOf(false, false, false, false, false),
+            arrayOf(false, false, false, false, false),
+            arrayOf(false, false, false, false, false),
+            arrayOf(false, false, false, false, false)
+        ),
         arrayOf(
             arrayOf(false, false, false, false, false),
             arrayOf(false, false, false, false, false),
@@ -90,6 +106,7 @@ class Maze(private val context: Context) {
 
     private fun generateMaze() {
         mapBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888)
+        clearMap()
 
         // Place player in random coordinate
         playerX = Random.nextInt(0..4)
@@ -163,7 +180,7 @@ class Maze(private val context: Context) {
     }
 
     private fun interactExit() {
-        // TODO make win message
+
     }
 
     private fun drawRoom(x: Int, y: Int) {
@@ -196,10 +213,11 @@ class Maze(private val context: Context) {
         Log.println(Log.INFO, "question", "$x $y")
         if (floorDiscovered[currentFloor][y][x]) return
         val questionBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.room_question)
+        val color = if (maze[currentFloor][y][x].roomName != "") Color.RED else Color.BLACK
         for (i in 0 until 100) {
             for (j in 0 until 100) {
                 if (questionBitmap[i, j] != Color.WHITE)
-                    mapBitmap[i + 100 * x, j + 100 * y] = questionBitmap[i, j]
+                    mapBitmap[i + 100 * x, j + 100 * y] = color
             }
         }
     }
