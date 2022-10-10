@@ -18,5 +18,9 @@
         android:id="@+id/mainGame"
         android:name="com.danilovfa.labyrinthadventure.view.MainGame"
         android:label="fragment_main_game"
-        tools:layout="@layout/fragment_main_game" />
+        tools:layout="@layout/fragment_main_game" >
+        <action
+            android:id="@+id/action_mainGame_to_mainMenu"
+            app:destination="@id/mainMenu" />
+    </fragment>
 </navigation>

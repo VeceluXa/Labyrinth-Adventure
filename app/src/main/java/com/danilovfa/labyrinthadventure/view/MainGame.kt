@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
 import com.danilovfa.labyrinthadventure.R
 import com.danilovfa.labyrinthadventure.databinding.FragmentMainGameBinding
 import com.danilovfa.labyrinthadventure.model.Maze
@@ -91,6 +92,12 @@ class MainGame : Fragment() {
         binding.buttonInteract.setOnClickListener {
             maze.interact()
             binding.imageView.setImageBitmap(maze.mapBitmap)
+
+            if (maze.currentRoom.roomName == "Exit") {
+                val myDialogFragment = WinDialogFragment()
+                myDialogFragment.show(parentFragmentManager, "dialog")
+                NavHostFragment.findNavController(this).navigate(R.id.action_mainGame_to_mainMenu)
+            }
         }
     }
 
