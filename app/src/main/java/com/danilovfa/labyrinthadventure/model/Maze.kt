@@ -109,13 +109,12 @@ class Maze(private val context: Context) {
         clearMap()
 
         // Place player in random coordinate
-        playerX = Random.nextInt(0..4)
-        playerY = Random.nextInt(0..4)
+        playerX = Random(System.currentTimeMillis()).nextInt(0..4)
+        playerY = Random(System.currentTimeMillis()).nextInt(0..4)
         currentRoom = maze[currentFloor][playerY][playerX]
         floorDiscovered[currentFloor][playerY][playerX] = true
         drawRoom(playerX, playerY)
         moveToRoom(currentFloor, playerX, playerY)
-//        drawMaze(mapBitmap, floor)
 
     }
 
